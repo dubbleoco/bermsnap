@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>BermSnap — Agent Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body,#root{min-height:100vh;background:#0F0E0C;color:#E8E2D6;font-family:'DM Sans','Segoe UI',sans-serif}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:#0F0E0C}
+::-webkit-scrollbar-thumb{background:#2E2B25;border-radius:3px}
+::selection{background:#E8953A;color:#0F0E0C}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const e=React.createElement;
+const {useState,useEffect}=React;
+
+const C={bg:"#0F0E0C",surface:"#1A1916",surfaceHover:"#222019",border:"#2E2B25",text:"#E8E2D6",textMuted:"#8A8475",textDim:"#5C574F",amber:"#E8953A",amberDim:"#C47A2A",amberGlow:"rgba(232,149,58,0.12)",green:"#5CB868",greenDim:"rgba(92,184,104,0.15)",red:"#D45B5B",blue:"#5B9BD4",blueDim:"rgba(91,155,212,0.15)"};
+
+const kpi={revenue_ytd:14820,revenue_target:32000,events_booked:8,events_pipeline:14,avg_per_event:1852,total_riders_shot:1420,avg_photos_per_rider:38,conversion_rate:12.4,smugmug_visits_30d:3200};
+const revData=[{m:"Sep",rev:2400},{m:"Oct",rev:3600},{m:"Nov",rev:1800},{m:"Dec",rev:0},{m:"Jan",rev:1200},{m:"Feb",rev:2820},{m:"Mar",rev:3000}];
+const pipeline=[
+  {id:1,event:"MXGC Rd 3 — Boise Creek",date:"Mar 8",riders:180,score:92,status:"confirmed",revenue:2800},
+  {id:2,event:"EnduroCross — Redding",date:"Mar 15",riders:120,score:87,status:"confirmed",revenue:1900},
+  {id:3,event:"Hare Scramble — Hollister",date:"Mar 22",riders:240,score:95,status:"outreach",revenue:null},
+  {id:4,event:"Desert 100 — Lucerne Valley",date:"Apr 5",riders:310,score:98,status:"outreach",revenue:null},
+  {id:5,event:"WORCS Rd 4 — Mesquite",date:"Apr 12",riders:280,score:91,status:"lead",revenue:null},
+  {id:6,event:"NMA Sprint — Perris",date:"Apr 19",riders:150,score:78,status:"lead",revenue:null},
+  {id:7,event:"SoCal GP — Glen Helen",date:"Apr 26",riders:350,score:96,status:"lead",revenue:null},
+  {id:8,event:"NGPC Rd 5 — Taft",date:"May 3",riders:220,score:88,status:"discovery",revenue:null},
+  {id:9,event:"Baja Rally Pre-Run",date:"May 10",riders:60,score:72,status:"discovery",revenue:null},
+  {id:10,event:"District 37 Dual Sport",date:"May 17",riders:110,score:69,status:"discovery",revenue:null}
+];
+const tasks=[
+  {id:1,task:"Send follow-up to Hare Scramble organizer (J. Reeves)",due:"Today",priority:"high",type:"outreach"},
+  {id:2,task:"Upload Boise Creek gallery to SmugMug",due:"Today",priority:"high",type:"ops"},
+  {id:3,task:"Draft pricing proposal for Desert 100",due:"Tomorrow",priority:"high",type:"outreach"},
+  {id:4,task:"Review WORCS organizer contact list",due:"Feb 25",priority:"med",type:"research"},
+  {id:5,task:"Post rider tag samples to Instagram",due:"Feb 25",priority:"med",type:"marketing"},
+  {id:6,task:"Score NMA Sprint event viability",due:"Feb 26",priority:"low",type:"research"},
+  {id:7,task:"Check competitor pricing at Glen Helen",due:"Feb 27",priority:"med",type:"research"}
+];
+const galleries=[
+  {name:"MXGC Rd 1 — Perris",riders:180,photos:6840,views:820,sales:1240,date:"Jan 18"},
+  {name:"MXGC Rd 2 — Lake Elsinore",riders:195,photos:7410,views:1100,sales:1580,date:"Feb 1"},
+  {name:"EnduroCross — Bakersfield",riders:110,photos:4180,views:540,sales:780,date:"Feb 8"},
+  {name:"Hare Scramble — Gorman",riders:220,photos:8360,views:1340,sales:2060,date:"Feb 15"},
+  {name:"WORCS Rd 2 — Primm",riders:260,photos:9880,views:980,sales:1420,date:"Jan 25"},
+  {name:"Desert Sprint — Lucerne",riders:145,photos:5510,views:620,sales:940,date:"Feb 22"}
+];
+
+const fmt=n=>n>=1000?"$"+(n/1000).toFixed(1)+"k":"$"+n;
+const fmtN=n=>n>=1000?(n/1000).toFixed(1)+"k":""+n;
+const sColor={confirmed:C.green,outreach:C.amber,lead:C.blue,discovery:C.textDim};
+const sBg={confirmed:C.greenDim,outreach:C.amberGlow,lead:C.blueDim,discovery:"rgba(92,87,79,0.15)"};
+const pColor={high:C.red,med:C.amber,low:C.textDim};
+const bc="'Barlow Condensed',sans-serif";
+
+function KPICard(p){
+  return e("div",{style:{background:C.surface,border:"1px solid "+C.border,borderRadius:6,padding:"16px 18px",minWidth:0}},
+    e("div",{style:{fontSize:11,fontWeight:600,letterSpacing:"0.08em",color:C.textMuted,textTransform:"uppercase",marginBottom:6}},p.label),
+    e("div",{style:{fontSize:26,fontWeight:700,color:p.accent||C.text,fontFamily:bc,lineHeight:1}},p.value),
+    p.sub&&e("div",{style:{fontSize:11,color:C.textDim,marginTop:4}},p.sub)
+  );
+}
+
+function ScoreBar(p){
+  var color=p.score>=90?C.green:p.score>=75?C.amber:C.textDim;
+  return e("div",{style:{display:"flex",alignItems:"center",gap:6}},
+    e("div",{style:{width:48,height:5,background:C.border,borderRadius:3,overflow:"hidden"}},
+      e("div",{style:{width:Math.min(p.score,100)+"%",height:"100%",background:color,borderRadius:3}})
+    ),
+    e("span",{style:{fontSize:11,color:color,fontWeight:600,fontFamily:bc}},p.score)
+  );
+}
+
+function StatusPill(p){
+  return e("span",{style:{fontSize:10,fontWeight:700,letterSpacing:"0.06em",textTransform:"uppercase",color:sColor[p.status],background:sBg[p.status],padding:"3px 8px",borderRadius:3}},p.status);
+}
+
+function TopBar(){
+  var d=new Date();
+  return e("div",{style:{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"14px 24px",borderBottom:"1px solid "+C.border,background:C.surface,flexWrap:"wrap",gap:10}},
+    e("div",{style:{display:"flex",alignItems:"center",gap:12}},
+      e("div",{style:{width:32,height:32,borderRadius:4,background:"linear-gradient(135deg,"+C.amber+","+C.amberDim+")",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:800,fontSize:14,color:C.bg,fontFamily:bc}},"B"),
+      e("div",null,
+        e("div",{style:{fontSize:15,fontWeight:700,color:C.text,fontFamily:bc,letterSpacing:"0.02em"}},"BERMSNAP"),
+        e("div",{style:{fontSize:10,color:C.textDim,letterSpacing:"0.04em"}},"AGENT DASHBOARD")
+      )
+    ),
+    e("div",{style:{display:"flex",alignItems:"center",gap:12,flexWrap:"wrap"}},
+      e("a",{href:"https://bermsnap.com",target:"_blank",rel:"noopener",style:{fontSize:10,color:C.textMuted,letterSpacing:"0.06em",textTransform:"uppercase",padding:"4px 10px",border:"1px solid "+C.border,borderRadius:3}},"bermsnap.com"),
+      e("a",{href:"https://bermsnap.smugmug.com",target:"_blank",rel:"noopener",style:{fontSize:10,color:C.amber,letterSpacing:"0.06em",textTransform:"uppercase",padding:"4px 10px",border:"1px solid "+C.amberDim,borderRadius:3,background:C.amberGlow}},"SmugMug"),
+      e("div",{style:{fontSize:11,color:C.textDim}},d.toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"}))
+    )
+  );
+}
+
+function KPIStrip(){
+  var pct=((kpi.revenue_ytd/kpi.revenue_target)*100).toFixed(0);
+  return e("div",{style:{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(150px,1fr))",gap:10,padding:"16px 24px"}},
+    e(KPICard,{label:"Revenue YTD",value:fmt(kpi.revenue_ytd),sub:pct+"% of $"+(kpi.revenue_target/1000).toFixed(0)+"k target",accent:C.amber}),
+    e(KPICard,{label:"Events Booked",value:kpi.events_booked,sub:kpi.events_pipeline+" in pipeline"}),
+    e(KPICard,{label:"Avg / Event",value:fmt(kpi.avg_per_event)}),
+    e(KPICard,{label:"Riders Shot",value:fmtN(kpi.total_riders_shot),sub:"~"+kpi.avg_photos_per_rider+" photos/rider"}),
+    e(KPICard,{label:"Conversion",value:kpi.conversion_rate+"%",sub:"gallery visitor → buyer",accent:C.green}),
+    e(KPICard,{label:"SmugMug Traffic",value:fmtN(kpi.smugmug_visits_30d),sub:"last 30 days"})
+  );
+}
+
+function RevenueChart(){
+  var W=500,H=160,pL=45,pR=10,pT=10,pB=28;
+  var cW=W-pL-pR,cH=H-pT-pB;
+  var mx=Math.max.apply(null,revData.map(function(d){return d.rev}))||1;
+  var pts=revData.map(function(d,i){
+    return {x:pL+(i/(revData.length-1))*cW,y:pT+cH-(d.rev/mx)*cH,d:d};
+  });
+  var line=pts.map(function(p,i){return (i===0?"M":"L")+p.x+","+p.y}).join(" ");
+  var area=line+" L"+pts[pts.length-1].x+","+(pT+cH)+" L"+pts[0].x+","+(pT+cH)+" Z";
+  var hov=useState(null),hover=hov[0],setHover=hov[1];
+
+  var yTicks=[0,1000,2000,3000,4000];
+  return e("div",{style:{background:C.surface,border:"1px solid "+C.border,borderRadius:6,padding:"18px 18px 8px"}},
+    e("div",{style:{fontSize:11,fontWeight:600,letterSpacing:"0.08em",color:C.textMuted,textTransform:"uppercase",marginBottom:12}},"Monthly Revenue"),
+    e("svg",{viewBox:"0 0 "+W+" "+H,style:{width:"100%",height:"auto",display:"block"},onMouseLeave:function(){setHover(null)}},
+      e("defs",null,e("linearGradient",{id:"ag",x1:"0",y1:"0",x2:"0",y2:"1"},
+        e("stop",{offset:"0%",stopColor:C.amber,stopOpacity:0.3}),
+        e("stop",{offset:"100%",stopColor:C.amber,stopOpacity:0})
+      )),
+      yTicks.map(function(v){
+        var y=pT+cH-(v/mx)*cH;
+        return e("g",{key:v},
+          e("line",{x1:pL,y1:y,x2:W-pR,y2:y,stroke:C.border,strokeWidth:0.5}),
+          e("text",{x:pL-6,y:y+3,textAnchor:"end",fill:C.textDim,fontSize:9,fontFamily:bc},"$"+v/1000+"k")
+        );
+      }),
+      e("path",{d:area,fill:"url(#ag)"}),
+      e("path",{d:line,fill:"none",stroke:C.amber,strokeWidth:2,strokeLinecap:"round",strokeLinejoin:"round"}),
+      pts.map(function(p,i){
+        return e("g",{key:i,onMouseEnter:function(){setHover(i)},style:{cursor:"pointer"}},
+          e("rect",{x:p.x-20,y:pT,width:40,height:cH+pB,fill:"transparent"}),
+          e("circle",{cx:p.x,cy:p.y,r:hover===i?5:3,fill:C.amber,stroke:hover===i?C.text:"none",strokeWidth:1.5}),
+          e("text",{x:p.x,y:pT+cH+16,textAnchor:"middle",fill:C.textDim,fontSize:9,fontFamily:"'DM Sans',sans-serif"},p.d.m),
+          hover===i?e("g",null,
+            e("rect",{x:p.x-28,y:p.y-24,width:56,height:18,rx:3,fill:C.bg,stroke:C.border}),
+            e("text",{x:p.x,y:p.y-12,textAnchor:"middle",fill:C.amber,fontSize:10,fontWeight:600,fontFamily:bc},"$"+p.d.rev.toLocaleString())
+          ):null
+        );
+      })
+    )
+  );
+}
+
+function FunnelSummary(){
+  var stages=[
+    {label:"Discovery",count:pipeline.filter(function(x){return x.status==="discovery"}).length,color:C.textDim},
+    {label:"Lead",count:pipeline.filter(function(x){return x.status==="lead"}).length,color:C.blue},
+    {label:"Outreach",count:pipeline.filter(function(x){return x.status==="outreach"}).length,color:C.amber},
+    {label:"Confirmed",count:pipeline.filter(function(x){return x.status==="confirmed"}).length,color:C.green}
+  ];
+  var mx=Math.max.apply(null,stages.map(function(s){return s.count}))||1;
+  return e("div",{style:{background:C.surface,border:"1px solid "+C.border,borderRadius:6,padding:18}},
+    e("div",{style:{fontSize:11,fontWeight:600,letterSpacing:"0.08em",color:C.textMuted,textTransform:"uppercase",marginBottom:14}},"Pipeline Funnel"),
+    e("div",{style:{display:"flex",flexDirection:"column",gap:10}},
+      stages.map(function(s){return e("div",{key:s.label},
+        e("div",{style:{display:"flex",justifyContent:"space-between",marginBottom:4}},
+          e("span",{style:{fontSize:11,color:s.color,fontWeight:600,textTransform:"uppercase",letterSpacing:"0.04em"}},s.label),
+          e("span",{style:{fontSize:18,fontWeight:700,color:s.color,fontFamily:bc}},s.count)
+        ),
+        e("div",{style:{height:6,background:C.border,borderRadius:3,overflow:"hidden"}},
+          e("div",{style:{width:(s.count/mx)*100+"%",height:"100%",background:s.color,borderRadius:3}})
+        )
+      )})
+    )
+  );
+}
+
+function HeartbeatStatus(){
+  var items=[
+    {action:"TASK_QUEUE reviewed",when:"Today 6:00 AM",ok:true},
+    {action:"KPI_SNAPSHOT refreshed",when:"Today 6:01 AM",ok:true},
+    {action:"Event discovery scan",when:"Mon Feb 17",ok:true},
+    {action:"Event scoring pass",when:"Mon Feb 17",ok:true},
+    {action:"Outreach tasks generated",when:"Mon Feb 17",ok:true},
+    {action:"Conflict check",when:"Mon Feb 17",ok:true}
+  ];
+  return e("div",{style:{background:C.surface,border:"1px solid "+C.border,borderRadius:6,padding:18}},
+    e("div",{style:{display:"flex",alignItems:"center",gap:8,marginBottom:14}},
+      e("div",{style:{width:8,height:8,borderRadius:"50%",background:C.green,boxShadow:"0 0 8px "+C.green}}),
+      e("div",{style:{fontSize:11,fontWeight:600,letterSpacing:"0.08em",color:C.textMuted,textTransform:"uppercase"}},"Agent Heartbeat")
+    ),
+    e("div",{style:{display:"flex",flexDirection:"column",gap:6}},
+      items.map(function(it,i){return e("div",{key:i,style:{display:"flex",alignItems:"center",justifyContent:"space-between",fontSize:11}},
+        e("div",{style:{display:"flex",alignItems:"center",gap:8}},
+          e("span",{style:{color:it.ok?C.green:C.red,fontSize:10}},it.ok?"●":"○"),
+          e("span",{style:{color:C.text}},it.action)
+        ),
+        e("span",{style:{color:C.textDim,fontSize:10}},it.when)
+      )})
+    )
+  );
+}
+
+function PlaybookLoop(){
+  var steps=["Discover","Score","Contact","Follow-up","Confirm","Execute","Sell","Analyze"];
+  var active=2;
+  return e("div",{style:{background:C.surface,border:"1px solid "+C.border,borderRadius:6,padding:18}},
+    e("div",{style:{fontSize:11,fontWeight:600,letterSpacing:"0.08em",color:C.textMuted,textTransform:"uppercase",marginBottom:14}},"Playbook Loop"),
+    e("div",{style:{display:"flex",flexWrap:"wrap",gap:6}},
+      steps.map(function(s,i){return e("div",{key:s,style:{display:"flex",alignItems:"center",gap:6}},
+        e("div",{style:{fontSize:11,fontWeight:700,letterSpacing:"0.04em",textTransform:"uppercase",padding:"5px 10px",borderRadius:3,background:i<=active?C.amberGlow:"transparent",color:i===active?C.amber:i<active?C.amberDim:C.textDim,border:i===active?"1px solid "+C.amberDim:"1px solid "+C.border}},s),
+        i<steps.length-1?e("span",{style:{color:i<active?C.amberDim:C.textDim,fontSize:10}},"→"):null
+      )})
+    )
+  );
+}
+
+function EventPipeline(){
+  var st=useState("all"),filter=st[0],setFilter=st[1];
+  var statuses=["all","confirmed","outreach","lead","discovery"];
+  var filtered=filter==="all"?pipeline:pipeline.filter(function(x){return x.status===filter});
+  var heads=["Event","Date","Riders","Score","Status","Revenue"];
+
+  return e("div",{style:{background:C.surface,border:"1px solid "+C.border,borderRadius:6,padding:18,overflow:"hidden"}},
+    e("div",{style:{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:14,flexWrap:"wrap",gap:8}},
+      e("div",{style:{fontSize:11,fontWeight:600,letterSpacing:"0.08em",color:C.textMuted,textTransform:"uppercase"}},"Event Pipeline"),
+      e("div",{style:{display:"flex",gap:4,flexWrap:"wrap"}},
+        statuses.map(function(s){return e("button",{key:s,onClick:function(){setFilter(s)},style:{fontSize:10,fontWeight:600,letterSpacing:"0.04em",textTransform:"uppercase",padding:"3px 8px",borderRadius:3,cursor:"pointer",background:filter===s?C.amberGlow:"transparent",color:filter===s?C.amber:C.textDim,border:filter===s?"1px solid "+C.amberDim:"1px solid transparent",fontFamily:"inherit"}},s)})
+      )
+    ),
+    e("div",{style:{overflowX:"auto"}},
+      e("table",{style:{width:"100%",borderCollapse:"collapse",fontSize:12,minWidth:600}},
+        e("thead",null,e("tr",{style:{borderBottom:"1px solid "+C.border}},
+          heads.map(function(h){return e("th",{key:h,style:{textAlign:"left",padding:"6px 8px",fontSize:10,fontWeight:600,letterSpacing:"0.06em",textTransform:"uppercase",color:C.textDim}},h)})
+        )),
+        e("tbody",null,
+          filtered.map(function(ev,i){return e("tr",{key:ev.id,
+            style:{borderBottom:i<filtered.length-1?"1px solid "+C.border:"none"},
+            onMouseEnter:function(x){x.currentTarget.style.background=C.surfaceHover},
+            onMouseLeave:function(x){x.currentTarget.style.background="transparent"}},
+            e("td",{style:{padding:"10px 8px",color:C.text,fontWeight:500}},ev.event),
+            e("td",{style:{padding:"10px 8px",color:C.textMuted}},ev.date),
+            e("td",{style:{padding:"10px 8px",color:C.text,fontFamily:bc,fontWeight:600}},ev.riders),
+            e("td",{style:{padding:"10px 8px"}},e(ScoreBar,{score:ev.score})),
+            e("td",{style:{padding:"10px 8px"}},e(StatusPill,{status:ev.status})),
+            e("td",{style:{padding:"10px 8px",color:ev.revenue?C.green:C.textDim,fontFamily:bc,fontWeight:600}},ev.revenue?"$"+ev.revenue.toLocaleString():"—")
+          )})
+        )
+      )
+    )
+  );
+}
+
+function TaskQueue(){
+  var st=useState(new Set()),done=st[0],setDone=st[1];
+  var toggle=function(id){setDone(function(prev){var n=new Set(prev);n.has(id)?n.delete(id):n.add(id);return n})};
+  return e("div",{style:{background:C.surface,border:"1px solid "+C.border,borderRadius:6,padding:18}},
+    e("div",{style:{fontSize:11,fontWeight:600,letterSpacing:"0.08em",color:C.textMuted,textTransform:"uppercase",marginBottom:12}},"Task Queue"),
+    e("div",{style:{display:"flex",flexDirection:"column",gap:2}},
+      tasks.map(function(t){return e("div",{key:t.id,onClick:function(){toggle(t.id)},
+        style:{display:"flex",alignItems:"center",gap:10,padding:"10px 8px",borderRadius:4,cursor:"pointer",opacity:done.has(t.id)?0.4:1},
+        onMouseEnter:function(x){x.currentTarget.style.background=C.surfaceHover},
+        onMouseLeave:function(x){x.currentTarget.style.background="transparent"}},
+        e("div",{style:{width:16,height:16,borderRadius:3,flexShrink:0,border:done.has(t.id)?"2px solid "+C.green:"2px solid "+C.border,background:done.has(t.id)?C.greenDim:"transparent",display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,color:C.green}},done.has(t.id)?"✓":null),
+        e("span",{style:{display:"inline-block",width:7,height:7,borderRadius:"50%",background:pColor[t.priority],flexShrink:0}}),
+        e("div",{style:{flex:1,minWidth:0}},
+          e("div",{style:{fontSize:12,color:C.text,fontWeight:500,textDecoration:done.has(t.id)?"line-through":"none",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}},t.task)
+        ),
+        e("span",{style:{fontSize:10,fontWeight:600,letterSpacing:"0.04em",textTransform:"uppercase",color:C.textDim,background:"rgba(92,87,79,0.12)",padding:"2px 6px",borderRadius:2,flexShrink:0}},t.type),
+        e("span",{style:{fontSize:11,color:t.due==="Today"?C.red:C.textMuted,fontWeight:500,flexShrink:0}},t.due)
+      )})
+    )
+  );
+}
+
+function GalleryPerformance(){
+  var maxS=Math.max.apply(null,galleries.map(function(g){return g.sales}));
+  var total=galleries.reduce(function(s,g){return s+g.sales},0);
+  return e("div",{style:{background:C.surface,border:"1px solid "+C.border,borderRadius:6,padding:18}},
+    e("div",{style:{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:14}},
+      e("div",{style:{fontSize:11,fontWeight:600,letterSpacing:"0.08em",color:C.textMuted,textTransform:"uppercase"}},"SmugMug Galleries"),
+      e("a",{href:"https://bermsnap.smugmug.com",target:"_blank",rel:"noopener",style:{fontSize:10,color:C.amber,letterSpacing:"0.06em"}},"VIEW ALL →")
+    ),
+    e("div",{style:{overflowX:"auto"}},
+      e("div",{style:{minWidth:550}},
+        galleries.map(function(g,i){return e("div",{key:i,style:{display:"grid",gridTemplateColumns:"1fr 70px 70px 70px 80px",alignItems:"center",padding:"10px 8px",gap:8,fontSize:12,borderBottom:i<galleries.length-1?"1px solid "+C.border:"none"}},
+          e("div",null,
+            e("div",{style:{color:C.text,fontWeight:500,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}},g.name),
+            e("div",{style:{fontSize:10,color:C.textDim}},g.date)
+          ),
+          e("div",{style:{textAlign:"right",color:C.textMuted}},g.riders," ",e("span",{style:{fontSize:10}},"riders")),
+          e("div",{style:{textAlign:"right",color:C.textMuted}},fmtN(g.photos)," ",e("span",{style:{fontSize:10}},"photos")),
+          e("div",{style:{textAlign:"right",color:C.textMuted}},fmtN(g.views)," ",e("span",{style:{fontSize:10}},"views")),
+          e("div",{style:{textAlign:"right"}},e("span",{style:{fontFamily:bc,fontWeight:700,fontSize:14,color:g.sales===maxS?C.amber:C.green}},"$"+g.sales.toLocaleString()))
+        )})
+      )
+    ),
+    e("div",{style:{marginTop:14,paddingTop:12,borderTop:"1px solid "+C.border,display:"flex",justifyContent:"space-between",fontSize:12}},
+      e("span",{style:{color:C.textMuted}},"Total gallery sales"),
+      e("span",{style:{fontFamily:bc,fontWeight:700,fontSize:16,color:C.amber}},"$"+total.toLocaleString())
+    )
+  );
+}
+
+function App(){
+  return e("div",{style:{minHeight:"100vh",background:C.bg}},
+    e(TopBar),
+    e(KPIStrip),
+    e("div",{style:{padding:"0 24px 24px",display:"flex",flexDirection:"column",gap:14}},
+      e("div",{style:{display:"grid",gridTemplateColumns:"1fr 280px 280px",gap:14}},
+        e(RevenueChart),
+        e(FunnelSummary),
+        e(HeartbeatStatus)
+      ),
+      e(PlaybookLoop),
+      e("div",{style:{display:"grid",gridTemplateColumns:"1fr 380px",gap:14}},
+        e(EventPipeline),
+        e(TaskQueue)
+      ),
+      e(GalleryPerformance),
+      e("div",{style:{textAlign:"center",padding:"16px 0 8px",fontSize:10,color:C.textDim,letterSpacing:"0.06em"}},"BERM AGENT · bermsnap.com · Powered by OpenClaw")
+    )
+  );
+}
+
+ReactDOM.render(e(App),document.getElementById("root"));
+</script>
+</body>
+</html>
