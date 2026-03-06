@@ -1,0 +1,48 @@
+{
+  "updated": "2026-03-05T20:42:00Z",
+  "pipeline": {
+    "total_events": 12,
+    "by_stage": {
+      "RESEARCHED": 2,
+      "DISCOVERED": 10
+    },
+    "by_tier": {
+      "PRIORITY": 1,
+      "LOW": 11
+    }
+  },
+  "outreach": {
+    "contacted": 0,
+    "confirmed": 0,
+    "declined": 0,
+    "conversion_rate": null
+  },
+  "revenue": {
+    "projected_pipeline_total": 27324,
+    "projected_priority_only": 9900,
+    "actual_ytd": 0,
+    "avg_sale": 22,
+    "expected_conversion": 0.18
+  },
+  "tasks": {
+    "open": 4,
+    "high_priority": 1,
+    "overdue": 0,
+    "complete": 1
+  },
+  "organizers": {
+    "total": 9,
+    "high_responsiveness": 0,
+    "contacted": 0
+  },
+  "flags": {
+    "competition_detected": [
+      "EVT-005 (Wausau 24) — XTR Photo is established event photographer (confirmed via site). Presented by Hayes. July 24-26 weekend."
+    ],
+    "scheduling_conflicts": [
+      "EVT-008 (Rough Stuff Rally) and EVT-001 (Ore to Shore) within 7 days — potential UP trip"
+    ],
+    "EVT-012_conflicts_EVT-001": "Skunk Hill Scramble is same day as Ore to Shore (Aug 8) — cannot do both",
+    "structural_note": "10 of 12 events score LOW primarily due to travel_friction from Detroit. Only 1 PRIORITY event. Recommend: (1) confirm home base, (2) consider adjusting travel threshold for high-revenue events."
+  }
+}

@@ -1,0 +1,64 @@
+[
+  {
+    "id": "TASK-003",
+    "created": "2026-03-02T17:34:00Z",
+    "due": "2026-03-06",
+    "priority": "HIGH",
+    "type": "OUTREACH",
+    "event_id": "EVT-001",
+    "organizer_id": "ORG-001",
+    "title": "Initial outreach — Ore to Shore MTB Epic (Aug 8, Marquette MI)",
+    "description": "Score 75 — PRIORITY. Michigan's largest MTB race, 2500 riders, $9,900 projected revenue. No confirmed official photographer. Contact via oretoshore.com contact form. Pitch BermSnap as event photographer — reference nonprofit mission, trail-building support, rider community value.",
+    "status": "OPEN",
+    "blockers": [],
+    "contact_resolved": "oretoshore@gmail.com — confirmed via FAQs page (race changes email). Phone: 866-370-7223."
+  },
+  {
+    "id": "TASK-004",
+    "created": "2026-03-02T17:34:00Z",
+    "due": "2026-03-09",
+    "priority": "MEDIUM",
+    "type": "RESEARCH",
+    "event_id": "EVT-002",
+    "organizer_id": "ORG-002",
+    "title": "Research Yankee Springs TT — confirm photographer situation & decision timeline",
+    "description": "Score 56 — near-term (Apr 25, 54 days out). 750 riders, longest-running MI MTB race. Check if official photographer exists. If not, initiate contact ASAP — this event is coming up fast. Also: WMMBA organizes MORC series year-round — a relationship here could unlock multiple events.",
+    "status": "OPEN",
+    "blockers": []
+  },
+  {
+    "id": "TASK-005",
+    "created": "2026-03-02T17:34:00Z",
+    "due": "2026-03-09",
+    "priority": "MEDIUM",
+    "type": "RESEARCH",
+    "title": "Confirm home base location for travel_friction calibration",
+    "description": "All travel penalties calculated from Detroit, MI. If BermSnap is based elsewhere (or willing to travel more aggressively for high-revenue events), scores on WI/OH events change significantly. Confirm: (1) home base city, (2) max acceptable one-way travel for a booked event. This affects 11 of 12 pipeline events.",
+    "status": "OPEN",
+    "blockers": []
+  },
+  {
+    "id": "TASK-006",
+    "created": "2026-03-02T17:34:00Z",
+    "due": "2026-03-09",
+    "priority": "MEDIUM",
+    "type": "RESEARCH",
+    "event_id": "EVT-003",
+    "organizer_id": "ORG-003",
+    "title": "Research Mohican 100 MTB — confirm photo coverage & OMBC series fit",
+    "description": "Score 53. 600 riders, 3h from Detroit. OMBC has 10+ races/year across Ohio — if Mohican has no official photographer, this could be a strong series partnership. Check ombc.net and ridemohican.com for photo vendor info.",
+    "status": "OPEN",
+    "blockers": []
+  },
+  {
+    "id": "TASK-002",
+    "created": "2026-03-02T09:07:06Z",
+    "due": "2026-03-02",
+    "priority": "MEDIUM",
+    "type": "CONFIG",
+    "title": "Configure Brave Search API key",
+    "description": "COMPLETED — API key configured. Weekly discovery now automated.",
+    "status": "COMPLETE",
+    "completed": "2026-03-02T12:31:00Z"
+  }
+]

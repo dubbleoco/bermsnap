@@ -1,0 +1,418 @@
+{
+  "generated": "2026-03-06T04:01:42.797251Z",
+  "kpi": {
+    "updated": "2026-03-05T20:42:00Z",
+    "pipeline": {
+      "total_events": 12,
+      "by_stage": {
+        "RESEARCHED": 2,
+        "DISCOVERED": 10
+      },
+      "by_tier": {
+        "PRIORITY": 1,
+        "LOW": 11
+      }
+    },
+    "outreach": {
+      "contacted": 0,
+      "confirmed": 0,
+      "declined": 0,
+      "conversion_rate": null
+    },
+    "revenue": {
+      "projected_pipeline_total": 27324,
+      "projected_priority_only": 9900,
+      "actual_ytd": 0,
+      "avg_sale": 22,
+      "expected_conversion": 0.18
+    },
+    "tasks": {
+      "open": 4,
+      "high_priority": 1,
+      "overdue": 0,
+      "complete": 1
+    },
+    "organizers": {
+      "total": 9,
+      "high_responsiveness": 0,
+      "contacted": 0
+    },
+    "flags": {
+      "competition_detected": [
+        "EVT-005 (Wausau 24) \u2014 XTR Photo is established event photographer (confirmed via site). Presented by Hayes. July 24-26 weekend."
+      ],
+      "scheduling_conflicts": [
+        "EVT-008 (Rough Stuff Rally) and EVT-001 (Ore to Shore) within 7 days \u2014 potential UP trip"
+      ],
+      "EVT-012_conflicts_EVT-001": "Skunk Hill Scramble is same day as Ore to Shore (Aug 8) \u2014 cannot do both",
+      "structural_note": "10 of 12 events score LOW primarily due to travel_friction from Detroit. Only 1 PRIORITY event. Recommend: (1) confirm home base, (2) consider adjusting travel threshold for high-revenue events."
+    }
+  },
+  "events": [
+    {
+      "id": "EVT-001",
+      "name": "Ore to Shore Mountain Bike Epic",
+      "date": "2026-08-08",
+      "location": "Marquette, MI",
+      "travel_hours_from_detroit": 4.5,
+      "est_riders": 2500,
+      "projected_revenue": 9900,
+      "url": "https://www.oretoshore.com/",
+      "stage": "RESEARCHED",
+      "tier": "PRIORITY",
+      "score": 75,
+      "score_breakdown": {
+        "rider_count_score": 30,
+        "revenue_potential_score": 25,
+        "terrain_visual_score": 15,
+        "organizer_quality_score": 9,
+        "sponsor_visibility_score": 8,
+        "travel_friction_penalty": -7,
+        "competition_penalty": -5
+      },
+      "notes": "Michigan's largest mass-start MTB event. 2500 field cap. 27th annual. Point-to-point UP terrain \u2014 elite photo opportunity. No confirmed official photographer found. Title sponsor: Honor Credit Union.",
+      "organizer_id": "ORG-001",
+      "discovered": "2026-03-02"
+    },
+    {
+      "id": "EVT-002",
+      "name": "Yankee Springs Time Trial",
+      "date": "2026-04-25",
+      "location": "Yankee Springs State Recreation Area, MI",
+      "travel_hours_from_detroit": 2.0,
+      "est_riders": 750,
+      "projected_revenue": 2970,
+      "url": "https://yankeespringstt.org/",
+      "stage": "RESEARCHED",
+      "tier": "LOW",
+      "score": 56,
+      "score_breakdown": {
+        "rider_count_score": 22,
+        "revenue_potential_score": 16,
+        "terrain_visual_score": 12,
+        "organizer_quality_score": 8,
+        "sponsor_visibility_score": 6,
+        "travel_friction_penalty": -3,
+        "competition_penalty": -5
+      },
+      "notes": "36th annual \u2014 longest-running MI MTB race. 750+ riders. Kicks off MORC series. Outside 90-day window (54 days out) but near-term opportunity worth monitoring. Score near CONSIDER threshold.",
+      "organizer_id": "ORG-002",
+      "discovered": "2026-03-02"
+    },
+    {
+      "id": "EVT-003",
+      "name": "Mohican 100 MTB Race",
+      "date": "2026-05-16",
+      "location": "Mohican State Park, OH (Loudonville)",
+      "travel_hours_from_detroit": 3.0,
+      "est_riders": 600,
+      "projected_revenue": 2376,
+      "url": "https://www.ombc.net/",
+      "stage": "DISCOVERED",
+      "tier": "LOW",
+      "score": 53,
+      "score_breakdown": {
+        "rider_count_score": 20,
+        "revenue_potential_score": 14,
+        "terrain_visual_score": 13,
+        "organizer_quality_score": 9,
+        "sponsor_visibility_score": 7,
+        "travel_friction_penalty": -5,
+        "competition_penalty": -5
+      },
+      "notes": "Top pros race alongside amateurs. Mohican Memorial Forest \u2014 rocky roots, dramatic terrain. Long-established. Worth investigating official photo coverage.",
+      "organizer_id": "ORG-003",
+      "discovered": "2026-03-02"
+    },
+    {
+      "id": "EVT-004",
+      "name": "MiSCA Race #1 \u2014 Stony Creek",
+      "date": "2026-08-22",
+      "location": "Stony Creek Metropark, MI (Shelby Township)",
+      "travel_hours_from_detroit": 0.5,
+      "est_riders": 500,
+      "projected_revenue": 1980,
+      "url": "https://miscabike.org/misca-race-series/",
+      "stage": "DISCOVERED",
+      "tier": "LOW",
+      "score": 46,
+      "score_breakdown": {
+        "rider_count_score": 18,
+        "revenue_potential_score": 12,
+        "terrain_visual_score": 8,
+        "organizer_quality_score": 7,
+        "sponsor_visibility_score": 5,
+        "travel_friction_penalty": -1,
+        "competition_penalty": -3
+      },
+      "notes": "Youth scholastic MTB series. 500+ student racers. Very close to Detroit. Avg sale may be lower (youth/parent buyers). Series has 6 races total in MI \u2014 good multi-event relationship potential.",
+      "organizer_id": "ORG-004",
+      "discovered": "2026-03-02"
+    },
+    {
+      "id": "EVT-005",
+      "name": "Wausau 24",
+      "date": "2026-07-25",
+      "location": "Wausau, WI",
+      "travel_hours_from_detroit": 5.5,
+      "est_riders": 500,
+      "projected_revenue": 1980,
+      "url": "https://wausau24.com/",
+      "stage": "DISCOVERED",
+      "tier": "LOW",
+      "score": 39,
+      "score_breakdown": {
+        "rider_count_score": 18,
+        "revenue_potential_score": 12,
+        "terrain_visual_score": 12,
+        "organizer_quality_score": 9,
+        "sponsor_visibility_score": 9,
+        "travel_friction_penalty": -9,
+        "competition_penalty": -12
+      },
+      "notes": "Largest 24hr MTB race in Midwest. Festival format (music, food trucks, trail run). COMPETITION FLAG: XTR Photo is established event photographer (confirmed via site). Presented by Hayes. July 24-26 weekend.",
+      "organizer_id": "ORG-005",
+      "discovered": "2026-03-02"
+    },
+    {
+      "id": "EVT-006",
+      "name": "Epic Bike Fest",
+      "date": "2026-06-06",
+      "location": "Cable, WI",
+      "travel_hours_from_detroit": 6.0,
+      "est_riders": 400,
+      "projected_revenue": 1584,
+      "url": "https://epicbikefest.com/",
+      "stage": "DISCOVERED",
+      "tier": "LOW",
+      "score": 38,
+      "score_breakdown": {
+        "rider_count_score": 15,
+        "revenue_potential_score": 10,
+        "terrain_visual_score": 13,
+        "organizer_quality_score": 8,
+        "sponsor_visibility_score": 7,
+        "travel_friction_penalty": -10,
+        "competition_penalty": -5
+      },
+      "notes": "Festival format \u2014 gravel + MTB, food trucks, cycling expo. CAMBA trails in Cable WI (world-class terrain). June 6, 2026.",
+      "organizer_id": "ORG-006",
+      "discovered": "2026-03-02"
+    },
+    {
+      "id": "EVT-007",
+      "name": "Cheq Challenge",
+      "date": "2026-08-01",
+      "location": "Cable, WI",
+      "travel_hours_from_detroit": 6.0,
+      "est_riders": 400,
+      "projected_revenue": 1584,
+      "url": "https://www.cheqmtb.com/",
+      "stage": "DISCOVERED",
+      "tier": "LOW",
+      "score": 37,
+      "score_breakdown": {
+        "rider_count_score": 15,
+        "revenue_potential_score": 10,
+        "terrain_visual_score": 13,
+        "organizer_quality_score": 8,
+        "sponsor_visibility_score": 6,
+        "travel_friction_penalty": -10,
+        "competition_penalty": -5
+      },
+      "notes": "CAMBA endurance race \u2014 30K/50K/100K. Iconic Chequamegon singletrack. Same location as Epic Bike Fest \u2014 potential same-trip combo with EVT-006 if dates worked. Aug 1.",
+      "organizer_id": "ORG-006",
+      "discovered": "2026-03-02"
+    },
+    {
+      "id": "EVT-008",
+      "name": "Rough Stuff Rally",
+      "date": "2026-08-01",
+      "location": "Copper Harbor, MI",
+      "travel_hours_from_detroit": 6.5,
+      "est_riders": 300,
+      "projected_revenue": 1188,
+      "url": "https://www.thenxrth.com/events/rough-stuff-rally",
+      "stage": "DISCOVERED",
+      "tier": "LOW",
+      "score": 37,
+      "score_breakdown": {
+        "rider_count_score": 14,
+        "revenue_potential_score": 9,
+        "terrain_visual_score": 15,
+        "organizer_quality_score": 7,
+        "sponsor_visibility_score": 5,
+        "travel_friction_penalty": -10,
+        "competition_penalty": -3
+      },
+      "notes": "MTB festival format. Copper Harbor trails = some of the best in the world. Aug 1-2. Same weekend as Ore to Shore eve \u2014 potential UP trip pairing with EVT-001 (Aug 8). High terrain visual score.",
+      "organizer_id": "ORG-007",
+      "discovered": "2026-03-02"
+    },
+    {
+      "id": "EVT-009",
+      "name": "Basecamp Bike Fest [WORS]",
+      "date": "2026-06-13",
+      "location": "Wausau, WI",
+      "travel_hours_from_detroit": 5.5,
+      "est_riders": 300,
+      "projected_revenue": 1188,
+      "url": "https://www.trekbikes.com/us/en_US/wors/",
+      "stage": "DISCOVERED",
+      "tier": "LOW",
+      "score": 35,
+      "score_breakdown": {
+        "rider_count_score": 14,
+        "revenue_potential_score": 9,
+        "terrain_visual_score": 11,
+        "organizer_quality_score": 8,
+        "sponsor_visibility_score": 7,
+        "travel_friction_penalty": -9,
+        "competition_penalty": -5
+      },
+      "notes": "Part of WORS (Wisconsin Off-Road Series) \u2014 largest state MTB racing series in America. Series sponsor: Trek. Wausau stop Jun 13. WORS runs all season \u2014 good series relationship target.",
+      "organizer_id": "ORG-008",
+      "discovered": "2026-03-02"
+    },
+    {
+      "id": "EVT-010",
+      "name": "Levis-Trow 100 [WEMS]",
+      "date": "2026-06-20",
+      "location": "Neillsville, WI",
+      "travel_hours_from_detroit": 6.5,
+      "est_riders": 250,
+      "projected_revenue": 990,
+      "url": "https://wemseries.com/levis-trow-100/",
+      "stage": "DISCOVERED",
+      "tier": "LOW",
+      "score": 31,
+      "score_breakdown": {
+        "rider_count_score": 12,
+        "revenue_potential_score": 8,
+        "terrain_visual_score": 12,
+        "organizer_quality_score": 7,
+        "sponsor_visibility_score": 5,
+        "travel_friction_penalty": -10,
+        "competition_penalty": -3
+      },
+      "notes": "WEMS endurance series. 30/60/100mi. Levis Mound singletrack \u2014 excellent WI trail. Jun 20.",
+      "organizer_id": "ORG-009",
+      "discovered": "2026-03-02"
+    },
+    {
+      "id": "EVT-011",
+      "name": "6 Hours of John Bryan [OMBC]",
+      "date": "2026-07-19",
+      "location": "John Bryan State Park, OH (Yellow Springs)",
+      "travel_hours_from_detroit": 3.5,
+      "est_riders": 200,
+      "projected_revenue": 792,
+      "url": "https://www.ombc.net/",
+      "stage": "DISCOVERED",
+      "tier": "LOW",
+      "score": 32,
+      "score_breakdown": {
+        "rider_count_score": 12,
+        "revenue_potential_score": 7,
+        "terrain_visual_score": 10,
+        "organizer_quality_score": 7,
+        "sponsor_visibility_score": 5,
+        "travel_friction_penalty": -6,
+        "competition_penalty": -3
+      },
+      "notes": "OMBC series stop. 6-hour enduro format. Multiple categories all levels. Jul 19.",
+      "organizer_id": "ORG-003",
+      "discovered": "2026-03-02"
+    },
+    {
+      "id": "EVT-012",
+      "name": "Skunk Hill Scramble [WEMS]",
+      "date": "2026-08-08",
+      "location": "Arpin, WI",
+      "travel_hours_from_detroit": 6.5,
+      "est_riders": 200,
+      "projected_revenue": 792,
+      "url": "https://wemseries.com/powers-bluff-endurance-challenge/",
+      "stage": "DISCOVERED",
+      "tier": "LOW",
+      "score": 28,
+      "score_breakdown": {
+        "rider_count_score": 11,
+        "revenue_potential_score": 7,
+        "terrain_visual_score": 10,
+        "organizer_quality_score": 7,
+        "sponsor_visibility_score": 5,
+        "travel_friction_penalty": -10,
+        "competition_penalty": -2
+      },
+      "notes": "WEMS endurance race. 3/6/10 hour format. Aug 8 \u2014 same day as Ore to Shore. Conflict if EVT-001 booked.",
+      "organizer_id": "ORG-009",
+      "discovered": "2026-03-02"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "TASK-003",
+      "created": "2026-03-02T17:34:00Z",
+      "due": "2026-03-06",
+      "priority": "HIGH",
+      "type": "OUTREACH",
+      "event_id": "EVT-001",
+      "organizer_id": "ORG-001",
+      "title": "Initial outreach \u2014 Ore to Shore MTB Epic (Aug 8, Marquette MI)",
+      "description": "Score 75 \u2014 PRIORITY. Michigan's largest MTB race, 2500 riders, $9,900 projected revenue. No confirmed official photographer. Contact via oretoshore.com contact form. Pitch BermSnap as event photographer \u2014 reference nonprofit mission, trail-building support, rider community value.",
+      "status": "OPEN",
+      "blockers": [],
+      "contact_resolved": "oretoshore@gmail.com \u2014 confirmed via FAQs page (race changes email). Phone: 866-370-7223."
+    },
+    {
+      "id": "TASK-004",
+      "created": "2026-03-02T17:34:00Z",
+      "due": "2026-03-09",
+      "priority": "MEDIUM",
+      "type": "RESEARCH",
+      "event_id": "EVT-002",
+      "organizer_id": "ORG-002",
+      "title": "Research Yankee Springs TT \u2014 confirm photographer situation & decision timeline",
+      "description": "Score 56 \u2014 near-term (Apr 25, 54 days out). 750 riders, longest-running MI MTB race. Check if official photographer exists. If not, initiate contact ASAP \u2014 this event is coming up fast. Also: WMMBA organizes MORC series year-round \u2014 a relationship here could unlock multiple events.",
+      "status": "OPEN",
+      "blockers": []
+    },
+    {
+      "id": "TASK-005",
+      "created": "2026-03-02T17:34:00Z",
+      "due": "2026-03-09",
+      "priority": "MEDIUM",
+      "type": "RESEARCH",
+      "title": "Confirm home base location for travel_friction calibration",
+      "description": "All travel penalties calculated from Detroit, MI. If BermSnap is based elsewhere (or willing to travel more aggressively for high-revenue events), scores on WI/OH events change significantly. Confirm: (1) home base city, (2) max acceptable one-way travel for a booked event. This affects 11 of 12 pipeline events.",
+      "status": "OPEN",
+      "blockers": []
+    },
+    {
+      "id": "TASK-006",
+      "created": "2026-03-02T17:34:00Z",
+      "due": "2026-03-09",
+      "priority": "MEDIUM",
+      "type": "RESEARCH",
+      "event_id": "EVT-003",
+      "organizer_id": "ORG-003",
+      "title": "Research Mohican 100 MTB \u2014 confirm photo coverage & OMBC series fit",
+      "description": "Score 53. 600 riders, 3h from Detroit. OMBC has 10+ races/year across Ohio \u2014 if Mohican has no official photographer, this could be a strong series partnership. Check ombc.net and ridemohican.com for photo vendor info.",
+      "status": "OPEN",
+      "blockers": []
+    },
+    {
+      "id": "TASK-002",
+      "created": "2026-03-02T09:07:06Z",
+      "due": "2026-03-02",
+      "priority": "MEDIUM",
+      "type": "CONFIG",
+      "title": "Configure Brave Search API key",
+      "description": "COMPLETED \u2014 API key configured. Weekly discovery now automated.",
+      "status": "COMPLETE",
+      "completed": "2026-03-02T12:31:00Z"
+    }
+  ],
+  "revenue_history": []
+}
