@@ -195,32 +195,81 @@ function PlaybookLoop(){
   );
 }
 
+// Persist decisions in localStorage
+var DECISIONS_KEY="bermsnap_decisions";
+function loadDecisions(){try{return JSON.parse(localStorage.getItem(DECISIONS_KEY)||"{}")}catch(e){return {}}}
+function saveDecision(id,val){var d=loadDecisions();d[id]=val;localStorage.setItem(DECISIONS_KEY,JSON.stringify(d));}
+
+function AcceptReject(p){
+  var dec=p.decision;
+  var btnBase={fontSize:10,fontWeight:700,letterSpacing:"0.06em",textTransform:"uppercase",padding:"4px 10px",borderRadius:3,cursor:"pointer",fontFamily:"inherit",transition:"all 0.1s"};
+  return e("div",{style:{display:"flex",gap:4,alignItems:"center"}},
+    dec==="ACCEPTED"
+      ? e("span",{style:{fontSize:10,fontWeight:700,color:C.green,letterSpacing:"0.06em",textTransform:"uppercase",padding:"4px 10px",background:C.greenDim,borderRadius:3,border:"1px solid "+C.green}}, "✓ ACCEPTED")
+      : dec==="REJECTED"
+      ? e("span",{style:{fontSize:10,fontWeight:700,color:C.red,letterSpacing:"0.06em",textTransform:"uppercase",padding:"4px 10px",background:"rgba(212,91,91,0.12)",borderRadius:3,border:"1px solid "+C.red}}, "✕ REJECTED")
+      : e(React.Fragment,null,
+          e("button",{onClick:function(x){x.stopPropagation();p.onAccept();},style:Object.assign({},btnBase,{background:C.greenDim,color:C.green,border:"1px solid rgba(92,184,104,0.4)"})},"✓"),
+          e("button",{onClick:function(x){x.stopPropagation();p.onReject();},style:Object.assign({},btnBase,{background:"rgba(212,91,91,0.1)",color:C.red,border:"1px solid rgba(212,91,91,0.3)"})},"✕")
+        ),
+    dec&&e("button",{onClick:function(x){x.stopPropagation();p.onClear();},style:Object.assign({},btnBase,{background:"transparent",color:C.textDim,border:"1px solid transparent",fontSize:9,padding:"4px 6px"})},"↩")
+  );
+}
+
 function EventPipeline(p){
   var events=p.events||[];
+  var decState=useState(function(){return loadDecisions();}),decisions=decState[0],setDecisions=decState[1];
   var st=useState("all"),filter=st[0],setFilter=st[1];
-  var stages=["all","RESEARCHED","DISCOVERED"];
-  var filtered=filter==="all"?events:events.filter(function(x){return x.stage===filter});
-  var heads=["Event","Date","Location","Riders","Score","Stage","Proj. Revenue"];
+  var stages=["all","RESEARCHED","DISCOVERED","ACCEPTED","REJECTED"];
+
+  function decide(id,val){
+    saveDecision(id,val);
+    setDecisions(function(prev){var n=Object.assign({},prev);n[id]=val;return n;});
+  }
+  function clearDecision(id){
+    var d=loadDecisions();delete d[id];localStorage.setItem(DECISIONS_KEY,JSON.stringify(d));
+    setDecisions(function(prev){var n=Object.assign({},prev);delete n[id];return n;});
+  }
+
+  var filtered=events.filter(function(x){
+    if(filter==="all") return true;
+    if(filter==="ACCEPTED") return decisions[x.id]==="ACCEPTED";
+    if(filter==="REJECTED") return decisions[x.id]==="REJECTED";
+    return x.stage===filter;
+  });
+
+  var accepted=Object.values(decisions).filter(function(v){return v==="ACCEPTED"}).length;
+  var rejected=Object.values(decisions).filter(function(v){return v==="REJECTED"}).length;
+  var pending=events.length-accepted-rejected;
+
+  var heads=["Event","Date","Location","Riders","Score","Stage","Proj. Revenue","Decision"];
 
   return e("div",{style:{background:C.surface,border:"1px solid "+C.border,borderRadius:6,padding:18,overflow:"hidden"}},
     e("div",{style:{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:14,flexWrap:"wrap",gap:8}},
-      e("div",{style:{fontSize:11,fontWeight:600,letterSpacing:"0.08em",color:C.textMuted,textTransform:"uppercase"}},"Event Pipeline ("+events.length+")"),
+      e("div",{style:{display:"flex",alignItems:"center",gap:12}},
+        e("div",{style:{fontSize:11,fontWeight:600,letterSpacing:"0.08em",color:C.textMuted,textTransform:"uppercase"}},"Event Pipeline ("+events.length+")"),
+        e("span",{style:{fontSize:10,color:C.green}},accepted+" accepted"),
+        e("span",{style:{fontSize:10,color:C.red}},rejected+" rejected"),
+        e("span",{style:{fontSize:10,color:C.textDim}},pending+" pending")
+      ),
       e("div",{style:{display:"flex",gap:4,flexWrap:"wrap"}},
         stages.map(function(s){return e("button",{key:s,onClick:function(){setFilter(s)},style:{fontSize:10,fontWeight:600,letterSpacing:"0.04em",textTransform:"uppercase",padding:"3px 8px",borderRadius:3,cursor:"pointer",background:filter===s?C.amberGlow:"transparent",color:filter===s?C.amber:C.textDim,border:filter===s?"1px solid "+C.amberDim:"1px solid transparent",fontFamily:"inherit"}},s)})
       )
     ),
     e("div",{style:{overflowX:"auto"}},
-      e("table",{style:{width:"100%",borderCollapse:"collapse",fontSize:12,minWidth:700}},
+      e("table",{style:{width:"100%",borderCollapse:"collapse",fontSize:12,minWidth:800}},
         e("thead",null,e("tr",{style:{borderBottom:"1px solid "+C.border}},
           heads.map(function(h){return e("th",{key:h,style:{textAlign:"left",padding:"6px 8px",fontSize:10,fontWeight:600,letterSpacing:"0.06em",textTransform:"uppercase",color:C.textDim}},h)})
         )),
         e("tbody",null,
           filtered.map(function(ev,i){
             var status=stageToStatus(ev.stage,ev.tier);
+            var dec=decisions[ev.id];
+            var rowBg=dec==="ACCEPTED"?"rgba(92,184,104,0.04)":dec==="REJECTED"?"rgba(212,91,91,0.04)":"transparent";
             return e("tr",{key:ev.id,
-              style:{borderBottom:i<filtered.length-1?"1px solid "+C.border:"none"},
-              onMouseEnter:function(x){x.currentTarget.style.background=C.surfaceHover},
-              onMouseLeave:function(x){x.currentTarget.style.background="transparent"}},
+              style:{borderBottom:i<filtered.length-1?"1px solid "+C.border:"none",background:rowBg,opacity:dec==="REJECTED"?0.55:1},
+              onMouseEnter:function(x){x.currentTarget.style.background=dec==="ACCEPTED"?"rgba(92,184,104,0.08)":dec==="REJECTED"?"rgba(212,91,91,0.08)":C.surfaceHover},
+              onMouseLeave:function(x){x.currentTarget.style.background=rowBg}},
               e("td",{style:{padding:"10px 8px"}},
                 e("div",{style:{color:ev.tier==="PRIORITY"?C.amber:C.text,fontWeight:500}},ev.name),
                 ev.tier==="PRIORITY"?e("div",{style:{fontSize:9,color:C.amber,letterSpacing:"0.06em",textTransform:"uppercase",marginTop:2}},"★ PRIORITY"):null
@@ -230,7 +279,8 @@ function EventPipeline(p){
               e("td",{style:{padding:"10px 8px",color:C.text,fontFamily:bc,fontWeight:600}},(ev.est_riders||0).toLocaleString()),
               e("td",{style:{padding:"10px 8px"}},e(ScoreBar,{score:ev.score||0})),
               e("td",{style:{padding:"10px 8px"}},e(StatusPill,{status:status})),
-              e("td",{style:{padding:"10px 8px",color:ev.projected_revenue?C.green:C.textDim,fontFamily:bc,fontWeight:600}},ev.projected_revenue?"$"+ev.projected_revenue.toLocaleString():"—")
+              e("td",{style:{padding:"10px 8px",color:ev.projected_revenue?C.green:C.textDim,fontFamily:bc,fontWeight:600}},ev.projected_revenue?"$"+ev.projected_revenue.toLocaleString():"—"),
+              e("td",{style:{padding:"6px 8px"}},e(AcceptReject,{decision:dec,onAccept:function(){decide(ev.id,"ACCEPTED");},onReject:function(){decide(ev.id,"REJECTED");},onClear:function(){clearDecision(ev.id);}}))
             );
           })
         )

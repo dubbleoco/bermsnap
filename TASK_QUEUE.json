@@ -1,5 +1,18 @@
 [
   {
+    "id": "TASK-007",
+    "created": "2026-03-05T23:07:00Z",
+    "due": "2026-03-07",
+    "priority": "HIGH",
+    "type": "RESEARCH",
+    "title": "Discover all Copper Harbor MTB events — add to pipeline",
+    "description": "Operator request: research ALL MTB events held in or near Copper Harbor, MI (Upper Peninsula). Copper Harbor Trails is one of the premier MTB destinations in the Midwest — there are likely multiple annual events (fat bike races, enduro, XC, trail fests). Find: event names, dates, organizers, estimated rider counts, URLs, contact info. Score each using standard BermSnap scoring. Add qualified events to EVENT_PIPELINE.json. Key starting points: copperharbortrails.org, trailforks.com/region/copper-harbor, mtbproject, BikeReg, Facebook groups. Also check: Keweenaw Fat Bike Classic, Copper Harbor Trails Fest, any LAMBA-organized events.",
+    "status": "OPEN",
+    "blockers": [],
+    "requested_by": "Neall",
+    "requested_at": "2026-03-05T23:07:00Z"
+  },
+  {
     "id": "TASK-003",
     "created": "2026-03-02T17:34:00Z",
     "due": "2026-03-06",
