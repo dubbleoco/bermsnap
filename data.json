@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-06T04:08:41.983033+00:00",
+  "generated": "2026-03-06T04:16:27.703472+00:00",
   "kpi": {
     "updated": "2026-03-05T20:42:00Z",
     "pipeline": {
@@ -23,6 +23,8 @@
       "projected_pipeline_total": 27324,
       "projected_priority_only": 9900,
       "actual_ytd": 0,
+      "prior_year_ytd": 0,
+      "prior_year_total": 0,
       "avg_sale": 22,
       "expected_conversion": 0.18
     },

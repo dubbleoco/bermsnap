@@ -105,6 +105,41 @@ function TopBar(p){
   );
 }
 
+function RevenueYTDCard(p){
+  var rev=p.revenue||{};
+  var ytd=rev.actual_ytd||0;
+  var pyYtd=rev.prior_year_ytd||0;
+  var pyTotal=rev.prior_year_total||0;
+  var hasPrior=pyYtd>0||pyTotal>0;
+  var diff=ytd-pyYtd;
+  var pct=pyYtd>0?Math.round((diff/pyYtd)*100):null;
+  var ahead=diff>=0;
+  var diffColor=diff>0?C.green:diff<0?C.red:C.textDim;
+  var diffLabel=diff===0?"—":(ahead?"+":"")+fmt(Math.abs(diff))+(pct!==null?" ("+Math.abs(pct)+"% "+(ahead?"▲":"▼")+")":"");
+
+  return e("div",{style:{background:C.surface,border:"1px solid "+C.border,borderRadius:6,padding:"16px 18px",minWidth:0}},
+    e("div",{style:{fontSize:11,fontWeight:600,letterSpacing:"0.08em",color:C.textMuted,textTransform:"uppercase",marginBottom:8}},"Revenue YTD"),
+    e("div",{style:{fontSize:26,fontWeight:700,color:C.amber,fontFamily:bc,lineHeight:1}},fmt(ytd)),
+    hasPrior
+      ? e("div",{style:{marginTop:8,paddingTop:8,borderTop:"1px solid "+C.border}},
+          e("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center"}},
+            e("span",{style:{fontSize:10,color:C.textDim}},"vs last year (same date)"),
+            e("span",{style:{fontSize:11,fontWeight:700,color:diffColor,fontFamily:bc}},diffLabel)
+          ),
+          e("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:4}}),
+          e("div",{style:{marginTop:6,height:4,background:C.border,borderRadius:2,overflow:"hidden",position:"relative"}},
+            pyTotal>0?e("div",{style:{position:"absolute",left:0,top:0,height:"100%",width:Math.min((pyYtd/pyTotal)*100,100)+"%",background:C.textDim,borderRadius:2,opacity:0.5}}):null,
+            pyTotal>0&&ytd>0?e("div",{style:{position:"absolute",left:0,top:0,height:"100%",width:Math.min((ytd/Math.max(pyTotal,ytd))*100,100)+"%",background:C.amber,borderRadius:2}}):null
+          ),
+          pyTotal>0?e("div",{style:{display:"flex",justifyContent:"space-between",marginTop:4}},
+            e("span",{style:{fontSize:9,color:C.textDim}},"Last year total: "+fmt(pyTotal)),
+            e("span",{style:{fontSize:9,color:C.textDim}},"Pace")
+          ):e("div",{style:{fontSize:10,color:C.textDim,marginTop:4}},"Prior year: $0 (first season)")
+        )
+      : e("div",{style:{fontSize:11,color:C.textDim,marginTop:4}},"First season — no prior year data yet")
+  );
+}
+
 function KPIStrip(p){
   var kpi=p.kpi||{};
   var pipeline=p.pipeline||{};
@@ -115,8 +150,8 @@ function KPIStrip(p){
   var totalEvents=p.events?p.events.length:0;
   var projectedRevenue=p.events?p.events.reduce(function(s,ev){return s+(ev.projected_revenue||0)},0):0;
 
-  return e("div",{style:{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(150px,1fr))",gap:10,padding:"16px 24px"}},
-    e(KPICard,{label:"Revenue YTD",value:fmt(kpi.revenue&&kpi.revenue.actual_ytd||0),sub:"$0 actual — pipeline building",accent:C.amber}),
+  return e("div",{style:{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(160px,1fr))",gap:10,padding:"16px 24px"}},
+    e(RevenueYTDCard,{revenue:kpi.revenue}),
     e(KPICard,{label:"Events in Pipeline",value:totalEvents,sub:(pipeline.by_stage&&pipeline.by_stage.RESEARCHED||0)+" researched"}),
     e(KPICard,{label:"Projected Revenue",value:fmt(projectedRevenue),sub:"at "+(kpi.revenue&&kpi.revenue.expected_conversion?Math.round(kpi.revenue.expected_conversion*100):18)+"% conversion"}),
     e(KPICard,{label:"Priority Events",value:(pipeline.by_tier&&pipeline.by_tier.PRIORITY)||1,sub:"score ≥ 70",accent:C.amber}),
